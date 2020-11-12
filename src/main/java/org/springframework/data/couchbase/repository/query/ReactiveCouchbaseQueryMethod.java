@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2020 the original author or authors.
+ * Copyright 2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,34 +98,6 @@ public class ReactiveCouchbaseQueryMethod extends CouchbaseQueryMethod {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.couchbase.repository.query.CouchbaseQueryMethod#createParameters(java.lang.reflect.Method)
-	 */
-	/*
-	@Override
-	protected CouchbaseParameters createParameters(Method method) {
-		return new CouchbaseParameters(method, isGeoNearQuery(method));
-	}*/
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.QueryMethod#isModifyingQuery()
-	 */
-	@Override
-	public boolean isModifyingQuery() {
-		return super.isModifyingQuery();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.QueryMethod#isQueryForEntity()
-	 */
-	@Override
-	public boolean isQueryForEntity() {
-		return super.isQueryForEntity();
-	}
-
-	/*
 	 * All reactive query methods are streaming queries.
 	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.query.QueryMethod#isStreamQuery()
@@ -137,6 +109,7 @@ public class ReactiveCouchbaseQueryMethod extends CouchbaseQueryMethod {
 
 	/*
 	 * does this query return a collection?
+	 * This must override QueryMethod.isCollection() as isCollectionQueryCouchbase is different from isCollectionQuery
 	 *
 	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.query.QueryMethod#isCollection()

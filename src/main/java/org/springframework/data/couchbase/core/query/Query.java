@@ -20,11 +20,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.couchbase.client.java.json.JsonArray;
-import com.couchbase.client.java.json.JsonObject;
-import com.couchbase.client.java.json.JsonValue;
-import com.couchbase.client.java.query.QueryOptions;
-import com.couchbase.client.java.query.QueryScanConsistency;
 import org.springframework.data.couchbase.core.ReactiveCouchbaseTemplate;
 import org.springframework.data.couchbase.core.convert.CouchbaseConverter;
 import org.springframework.data.couchbase.core.mapping.CouchbasePersistentEntity;
@@ -37,9 +32,13 @@ import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.util.Assert;
 
+import com.couchbase.client.java.json.JsonArray;
+import com.couchbase.client.java.json.JsonObject;
+import com.couchbase.client.java.json.JsonValue;
+import com.couchbase.client.java.query.QueryOptions;
+import com.couchbase.client.java.query.QueryScanConsistency;
+
 /**
- * Couchbase Query
- *
  * @author Michael Nitschinger
  * @author Michael Reiche
  */
@@ -108,20 +107,11 @@ public class Query {
 	 * Limit the number of returned documents to {@code limit}.
 	 *
 	 * @param limit
-	 * @return this
+	 * @return
 	 */
 	public Query limit(int limit) {
 		this.limit = limit;
 		return this;
-	}
-
-	/**
-	 * limit
-	 *
-	 * @return limit
-	 */
-	public int getLimit() {
-		return limit;
 	}
 
 	/**
@@ -329,4 +319,7 @@ public class Query {
 		return options;
 	}
 
+	public void setMeta(Meta metaAnnotation) {
+		Meta meta = metaAnnotation;
+	}
 }

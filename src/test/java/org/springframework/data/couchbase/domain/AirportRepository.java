@@ -42,7 +42,6 @@ public interface AirportRepository extends PagingAndSortingRepository<Airport, S
 	Iterable<Airport> findAll();
 
 	@Override
-	@ScanConsistency(query = QueryScanConsistency.REQUEST_PLUS)
 	Airport save(Airport airport);
 
 	@ScanConsistency(query = QueryScanConsistency.REQUEST_PLUS)
@@ -68,7 +67,7 @@ public interface AirportRepository extends PagingAndSortingRepository<Airport, S
 	@ScanConsistency(query = QueryScanConsistency.REQUEST_PLUS)
 	long count();
 
-	@Query("#{#n1ql.selectEntity} WHERE #{#n1ql.filter}  #{#projectIds != null ? 'AND iata IN $1' : ''} "
+	@Query("select count(*) from #{#n1ql.bucket} WHERE #{#n1ql.filter}  #{#projectIds != null ? 'AND iata IN $1' : ''} "
 			+ " #{#planIds != null ? 'AND icao IN $2' : ''}  #{#active != null ? 'AND false = $3' : ''} ")
 	@ScanConsistency(query = QueryScanConsistency.REQUEST_PLUS)
 	Long countFancyExpression(@Param("projectIds") List<String> projectIds, @Param("planIds") List<String> planIds,

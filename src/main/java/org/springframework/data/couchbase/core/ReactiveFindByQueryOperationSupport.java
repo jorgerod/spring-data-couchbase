@@ -15,18 +15,16 @@
  */
 package org.springframework.data.couchbase.core;
 
+import org.springframework.data.couchbase.core.support.TemplateUtils;
+import org.springframework.data.couchbase.core.query.Query;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import org.springframework.data.couchbase.core.query.Query;
-import org.springframework.data.couchbase.core.support.TemplateUtils;
 
 import com.couchbase.client.java.query.QueryScanConsistency;
 import com.couchbase.client.java.query.ReactiveQueryResult;
 
 /**
- * {@link ReactiveFindByQueryOperation} implementations for Couchbase.
- *
  * @author Michael Nitschinger
  * @author Michael Reiche
  */
@@ -42,8 +40,7 @@ public class ReactiveFindByQueryOperationSupport implements ReactiveFindByQueryO
 
 	@Override
 	public <T> ReactiveFindByQuery<T> findByQuery(final Class<T> domainType) {
-		return new ReactiveFindByQuerySupport<>(template, domainType, ALL_QUERY, QueryScanConsistency.NOT_BOUNDED,
-				null);
+		return new ReactiveFindByQuerySupport<>(template, domainType, ALL_QUERY, QueryScanConsistency.NOT_BOUNDED);
 	}
 
 	static class ReactiveFindByQuerySupport<T> implements ReactiveFindByQuery<T> {
@@ -52,15 +49,13 @@ public class ReactiveFindByQueryOperationSupport implements ReactiveFindByQueryO
 		private final Class<T> domainType;
 		private final Query query;
 		private final QueryScanConsistency scanConsistency;
-		private final String collection;
 
 		ReactiveFindByQuerySupport(final ReactiveCouchbaseTemplate template, final Class<T> domainType, final Query query,
-				final QueryScanConsistency scanConsistency, final String collection) {
+				final QueryScanConsistency scanConsistency) {
 			this.template = template;
 			this.domainType = domainType;
 			this.query = query;
 			this.scanConsistency = scanConsistency;
-			this.collection = collection;
 		}
 
 		@Override
@@ -71,22 +66,12 @@ public class ReactiveFindByQueryOperationSupport implements ReactiveFindByQueryO
 			} else {
 				scanCons = scanConsistency;
 			}
-			return new ReactiveFindByQuerySupport<>(template, domainType, query, scanCons, collection);
+			return new ReactiveFindByQuerySupport<>(template, domainType, query, scanCons);
 		}
 
 		@Override
 		public FindByQueryConsistentWith<T> consistentWith(QueryScanConsistency scanConsistency) {
-			return new ReactiveFindByQuerySupport<>(template, domainType, query, scanConsistency, collection);
-		}
-
-		@Override
-		public FindInCollection<T> inCollection(String collection) {
-			return new ReactiveFindByQuerySupport<>(template, domainType, query, scanConsistency, collection);
-		}
-
-		@Override
-		public TerminatingDistinct<Object> distinct(String field) {
-			throw new RuntimeException(("not implemented"));
+			return new ReactiveFindByQuerySupport<>(template, domainType, query, scanConsistency);
 		}
 
 		@Override
@@ -144,6 +129,7 @@ public class ReactiveFindByQueryOperationSupport implements ReactiveFindByQueryO
 		private String assembleEntityQuery(final boolean count) {
 			return query.toN1qlSelectString(template, this.domainType, count);
 		}
+
 	}
 
 }

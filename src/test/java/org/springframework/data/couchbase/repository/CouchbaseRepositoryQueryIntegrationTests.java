@@ -144,13 +144,10 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 			vie = airportRepository.save(vie);
 			List<Airport> airports = airportRepository.findAllByIata("vie");
 			assertEquals(1, airports.size());
-			System.out.println("findAllByIata(0): " + airports.get(0));
 			Airport airport1 = airportRepository.findById(airports.get(0).getId()).get();
 			assertEquals(airport1.getIata(), vie.getIata());
-			System.out.println("findById: " + airport1);
 			Airport airport2 = airportRepository.findByIata(airports.get(0).getIata());
 			assertEquals(airport1.getId(), vie.getId());
-			System.out.println("findByIata: " + airport2);
 		} finally {
 			airportRepository.delete(vie);
 		}

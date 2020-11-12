@@ -43,12 +43,6 @@ public interface ExecutableRemoveByQueryOperation {
 
 	}
 
-	interface RemoveByQueryInCollection<T> extends RemoveByQueryConsistentWith<T> {
-
-		RemoveByQueryConsistentWith<T> inCollection(String collection);
-
-	}
-
-	interface ExecutableRemoveByQuery<T> extends RemoveByQueryInCollection<T> {}
+	interface ExecutableRemoveByQuery<T> extends RemoveByQueryConsistentWith<T> {}
 
 }

@@ -33,7 +33,7 @@ public class ExecutableRemoveByQueryOperationSupport implements ExecutableRemove
 
 	@Override
 	public <T> ExecutableRemoveByQuery<T> removeByQuery(Class<T> domainType) {
-		return new ExecutableRemoveByQuerySupport<>(template, domainType, ALL_QUERY, QueryScanConsistency.NOT_BOUNDED, null);
+		return new ExecutableRemoveByQuerySupport<>(template, domainType, ALL_QUERY, QueryScanConsistency.NOT_BOUNDED);
 	}
 
 	static class ExecutableRemoveByQuerySupport<T> implements ExecutableRemoveByQuery<T> {
@@ -43,17 +43,15 @@ public class ExecutableRemoveByQueryOperationSupport implements ExecutableRemove
 		private final Query query;
 		private final ReactiveRemoveByQueryOperationSupport.ReactiveRemoveByQuerySupport<T> reactiveSupport;
 		private final QueryScanConsistency scanConsistency;
-		private final String collection;
 
 		ExecutableRemoveByQuerySupport(final CouchbaseTemplate template, final Class<T> domainType, final Query query,
-				final QueryScanConsistency scanConsistency, String collection) {
+				final QueryScanConsistency scanConsistency) {
 			this.template = template;
 			this.domainType = domainType;
 			this.query = query;
 			this.reactiveSupport = new ReactiveRemoveByQueryOperationSupport.ReactiveRemoveByQuerySupport<>(
 					template.reactive(), domainType, query, scanConsistency);
 			this.scanConsistency = scanConsistency;
-			this.collection = collection;
 		}
 
 		@Override
@@ -63,16 +61,12 @@ public class ExecutableRemoveByQueryOperationSupport implements ExecutableRemove
 
 		@Override
 		public TerminatingRemoveByQuery<T> matching(final Query query) {
-			return new ExecutableRemoveByQuerySupport<>(template, domainType, query, scanConsistency, collection);
+			return new ExecutableRemoveByQuerySupport<>(template, domainType, query, scanConsistency);
 		}
 
 		@Override
 		public RemoveByQueryWithQuery<T> consistentWith(final QueryScanConsistency scanConsistency) {
-			return new ExecutableRemoveByQuerySupport<>(template, domainType, query, scanConsistency, collection);
-		}
-		@Override
-		public RemoveByQueryInCollection<T> inCollection(final String collection) {
-			return new ExecutableRemoveByQuerySupport<>(template, domainType, query, scanConsistency, collection);
+			return new ExecutableRemoveByQuerySupport<>(template, domainType, query, scanConsistency);
 		}
 
 	}

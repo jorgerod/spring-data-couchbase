@@ -71,7 +71,7 @@ public interface ReactiveAirportRepository extends ReactiveSortingRepository<Air
 
 	// use parameter type PageRequest instead of Pageable. Pageable requires a return type of Page<>
 	@ScanConsistency(query = QueryScanConsistency.REQUEST_PLUS)
-	Page<Flux<Airport>> findAllByIataLike(String iata, final PageRequest page);
+	Flux<Airport> findAllByIataLike(String iata, final PageRequest page);
 
 	// use parameter type PageRequest instead of Pageable. Pageable requires a return type of Page<>
 	@ScanConsistency(query = QueryScanConsistency.REQUEST_PLUS)

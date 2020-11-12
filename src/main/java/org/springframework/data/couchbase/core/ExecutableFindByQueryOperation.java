@@ -130,17 +130,6 @@ public interface ExecutableFindByQueryOperation {
 
 	}
 
-	interface FindByQueryInCollection<T> extends FindByQueryConsistentWith<T> {
-
-		/**
-		 * Allows to override the default scan consistency.
-		 *
-		 * @param collection the collection to use for this query.
-		 */
-		FindByQueryInCollection<T> inCollection(String collection);
-
-	}
-
-	interface ExecutableFindByQuery<T> extends FindByQueryInCollection<T> {}
+	interface ExecutableFindByQuery<T> extends FindByQueryConsistentWith<T> {}
 
 }

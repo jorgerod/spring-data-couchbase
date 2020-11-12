@@ -21,7 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import reactor.test.StepVerifier;
+
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -108,13 +111,10 @@ public class ReactiveCouchbaseRepositoryQueryIntegrationTests extends ClusterAwa
 			vie = airportRepository.save(vie).block();
 			List<Airport> airports = airportRepository.findAllByIata("vie").collectList().block();
 			assertEquals(1, airports.size());
-			System.out.println("findAllByIata(0): " + airports.get(0));
 			Airport airport1 = airportRepository.findById(airports.get(0).getId()).block();
 			assertEquals(airport1.getIata(), vie.getIata());
-			System.out.println("findById: " + airport1);
 			Airport airport2 = airportRepository.findByIata(airports.get(0).getIata()).block();
 			assertEquals(airport1.getId(), vie.getId());
-			System.out.println("findByIata: " + airport2);
 		} finally {
 			airportRepository.delete(vie).block();
 		}
@@ -133,35 +133,29 @@ public class ReactiveCouchbaseRepositoryQueryIntegrationTests extends ClusterAwa
 
 	@Test
 	void count() {
-		String[] iatas = { "JFK", "IAD", "SFO", "SJC", "SEA", "LAX", "PHX" };
-		Future[] future = new Future[iatas.length];
-		ExecutorService executorService = Executors.newFixedThreadPool(iatas.length);
+		Set<String> iatas = Set.of("JFK", "IAD", "SFO", "SJC", "SEA", "LAX", "PHX");
+		Future[] future = new Future[iatas.size()];
+		ExecutorService executorService = Executors.newFixedThreadPool(iatas.size());
 		try {
-			Callable<Boolean>[] suppliers = new Callable[iatas.length];
-			for (int i = 0; i < iatas.length; i++) {
-				Airport airport = new Airport("airports::" + iatas[i], iatas[i] /*iata*/, iatas[i].toLowerCase() /* lcao */);
+			Callable<Boolean>[] suppliers = new Callable[iatas.size()];
+			for (String iata : iatas) {
+				Airport airport = new Airport("airports::" + iata, iata, iata.toLowerCase() /* lcao */);
 				airportRepository.save(airport).block();
 			}
 
 			int page = 0;
-			for (; page < 10;) {
-				PageRequest pageable = PageRequest.of(page++, 2);
-				System.out.println("findAllByIataLike: " + "%S");
-				// java.lang.IndexOutOfBoundsException: Source emitted more than one item
-				// Flux<Airport> airportFlux = airportRepository.findAllByIataLike("S%");
-				// List<Airport> airportList = airportFlux.collectList().block();
-				List<Airport> airportList = airportRepository.findAllByIataLike("S%").toStream().collect(Collectors.toList());
-				if (airportList.isEmpty()) {
-					break;
-				}
-				for (Airport a : airportList) {
-					System.out.println(a.getIata() + " " + a.getIcao());
-				}
-				System.out.println("-----");
-			}
 
-			Long airportCount = airportCount = airportRepository.count().block();
-			assertEquals(iatas.length, airportCount);
+			airportRepository.findAllByIataLike("S%", PageRequest.of(page++, 2)).as(StepVerifier::create) //
+					.expectNextMatches(a -> {
+						System.out.println(a);
+						return iatas.contains(a.getIata());
+					}).expectNextMatches(a -> iatas.contains(a.getIata())).verifyComplete();
+
+			airportRepository.findAllByIataLike("S%", PageRequest.of(page++, 2)).as(StepVerifier::create) //
+					.expectNextMatches(a -> iatas.contains(a.getIata())).verifyComplete();
+
+			Long airportCount = airportRepository.count().block();
+			assertEquals(iatas.size(), airportCount);
 
 			airportCount = airportRepository.countByIataIn("JFK", "IAD", "SFO").block();
 			assertEquals(3, airportCount);
@@ -176,8 +170,8 @@ public class ReactiveCouchbaseRepositoryQueryIntegrationTests extends ClusterAwa
 			rte.printStackTrace(System.out);
 			throw rte;
 		} finally {
-			for (int i = 0; i < iatas.length; i++) {
-				Airport airport = new Airport("airports::" + iatas[i], iatas[i] /*iata*/, iatas[i] /* lcao */);
+			for (String iata : iatas) {
+				Airport airport = new Airport("airports::" + iata, iata, iata.toLowerCase() /* lcao */);
 				try {
 					airportRepository.delete(airport).block();
 				} catch (DataRetrievalFailureException drfe) {
