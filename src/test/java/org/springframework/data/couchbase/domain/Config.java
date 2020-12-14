@@ -31,6 +31,7 @@ import org.springframework.data.couchbase.core.CouchbaseTemplate;
 import org.springframework.data.couchbase.core.ReactiveCouchbaseTemplate;
 import org.springframework.data.couchbase.core.convert.CouchbaseCustomConversions;
 import org.springframework.data.couchbase.core.convert.MappingCouchbaseConverter;
+import org.springframework.data.couchbase.core.convert.translation.TranslationService;
 import org.springframework.data.couchbase.core.mapping.CouchbaseMappingContext;
 import org.springframework.data.couchbase.domain.time.AuditingDateTimeProvider;
 import org.springframework.data.couchbase.repository.auditing.EnableCouchbaseAuditing;
@@ -145,15 +146,15 @@ public class Config extends AbstractCouchbaseConfiguration {
 	// do not use reactiveCouchbaseTemplate for the name of this method, otherwise the value of that bean
 	// will be used instead of the result of this call (the client factory arg is different)
 	public ReactiveCouchbaseTemplate myReactiveCouchbaseTemplate(CouchbaseClientFactory couchbaseClientFactory,
-			MappingCouchbaseConverter mappingCouchbaseConverter) {
-		return new ReactiveCouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter);
+			MappingCouchbaseConverter mappingCouchbaseConverter, TranslationService translationService) {
+		return new ReactiveCouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter, translationService);
 	}
 
 	// do not use couchbaseTemplate for the name of this method, otherwise the value of that been
 	// will be used instead of the result from this call (the client factory arg is different)
 	public CouchbaseTemplate myCouchbaseTemplate(CouchbaseClientFactory couchbaseClientFactory,
-			MappingCouchbaseConverter mappingCouchbaseConverter) {
-		return new CouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter);
+			MappingCouchbaseConverter mappingCouchbaseConverter, TranslationService translationService) {
+		return new CouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter, translationService);
 	}
 
 	// do not use couchbaseClientFactory for the name of this method, otherwise the value of that bean will

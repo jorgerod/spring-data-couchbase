@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.couchbase.CouchbaseClientFactory;
 import org.springframework.data.couchbase.core.convert.CouchbaseConverter;
+import org.springframework.data.couchbase.core.convert.translation.TranslationService;
 import org.springframework.data.couchbase.core.index.CouchbasePersistentEntityIndexCreator;
 import org.springframework.data.couchbase.core.mapping.CouchbaseMappingContext;
 import org.springframework.data.couchbase.core.mapping.CouchbasePersistentEntity;
@@ -47,11 +48,12 @@ public class CouchbaseTemplate implements CouchbaseOperations, ApplicationContex
 	private final ReactiveCouchbaseTemplate reactiveCouchbaseTemplate;
 	private @Nullable CouchbasePersistentEntityIndexCreator indexCreator;
 
-	public CouchbaseTemplate(final CouchbaseClientFactory clientFactory, final CouchbaseConverter converter) {
+	public CouchbaseTemplate(final CouchbaseClientFactory clientFactory, final CouchbaseConverter converter,
+		final TranslationService translationService) {
 		this.clientFactory = clientFactory;
 		this.converter = converter;
-		this.templateSupport = new CouchbaseTemplateSupport(converter);
-		this.reactiveCouchbaseTemplate = new ReactiveCouchbaseTemplate(clientFactory, converter);
+		this.templateSupport = new CouchbaseTemplateSupport(converter, translationService);
+		this.reactiveCouchbaseTemplate = new ReactiveCouchbaseTemplate(clientFactory, converter, translationService);
 
 		this.mappingContext = this.converter.getMappingContext();
 		if (mappingContext instanceof CouchbaseMappingContext) {
