@@ -61,6 +61,7 @@ import com.couchbase.client.java.json.JacksonTransformers;
  * @author Simon Baslé
  * @author Stephane Nicoll
  * @author Subhashni Balakrishnan
+ * @author Jorge Rodriguez Martin
  */
 @Configuration
 public abstract class AbstractCouchbaseConfiguration {

@@ -32,6 +32,7 @@ import com.couchbase.client.java.Collection;
  *
  * @author Michael Nitschinger
  * @author Michael Reiche
+ * @author Jorge Rodriguez Martin
  */
 public class ReactiveCouchbaseTemplate implements ReactiveCouchbaseOperations, ApplicationContextAware {
 

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Michael Nitschinger
  * @author Michael Reiche
+ * @author Jorge Rodriguez Martin
  * @since 3.0
  */
 class CouchbaseTemplateSupport implements ApplicationContextAware {

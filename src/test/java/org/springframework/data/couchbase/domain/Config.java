@@ -46,6 +46,7 @@ import java.util.Collections;
 /**
  * @author Michael Nitschinger
  * @author Michael Reiche
+ * @author Jorge Rodriguez Martin
  * @since 3.0
  */
 @Configuration

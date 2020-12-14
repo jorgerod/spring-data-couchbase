@@ -37,6 +37,7 @@ import com.couchbase.client.java.Collection;
  *
  * @author Michael Nitschinger
  * @author Michael Reiche
+ * @author Jorge Rodriguez Martin
  * @since 3.0
  */
 public class CouchbaseTemplate implements CouchbaseOperations, ApplicationContextAware {
