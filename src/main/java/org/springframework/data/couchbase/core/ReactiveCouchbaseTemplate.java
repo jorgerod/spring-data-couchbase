@@ -43,7 +43,7 @@ public class ReactiveCouchbaseTemplate implements ReactiveCouchbaseOperations, A
 	private final CouchbaseTemplateSupport templateSupport;
 
 	public ReactiveCouchbaseTemplate(final CouchbaseClientFactory clientFactory, final CouchbaseConverter converter) {
-			this(clientFactory, converter, new JacksonTranslationService());
+		this(clientFactory, converter, new JacksonTranslationService());
 	}
 
 	public ReactiveCouchbaseTemplate(final CouchbaseClientFactory clientFactory, final CouchbaseConverter converter,

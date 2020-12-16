@@ -51,7 +51,7 @@ public class CouchbaseTemplate implements CouchbaseOperations, ApplicationContex
 	private @Nullable CouchbasePersistentEntityIndexCreator indexCreator;
 
 	public CouchbaseTemplate(final CouchbaseClientFactory clientFactory, final CouchbaseConverter converter) {
-			this(clientFactory, converter, new JacksonTranslationService());
+		this(clientFactory, converter, new JacksonTranslationService());
 	}
 
 	public CouchbaseTemplate(final CouchbaseClientFactory clientFactory, final CouchbaseConverter converter,
