@@ -150,10 +150,22 @@ public abstract class AbstractCouchbaseConfiguration {
 		return new CouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter, couchbaseTranslationService);
 	}
 
+	public CouchbaseTemplate couchbaseTemplate(CouchbaseClientFactory couchbaseClientFactory,
+			MappingCouchbaseConverter mappingCouchbaseConverter) {
+		return couchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter, new JacksonTranslationService());
+	}
+
 	@Bean(name = BeanNames.REACTIVE_COUCHBASE_TEMPLATE)
 	public ReactiveCouchbaseTemplate reactiveCouchbaseTemplate(CouchbaseClientFactory couchbaseClientFactory,
 			MappingCouchbaseConverter mappingCouchbaseConverter, TranslationService couchbaseTranslationService) {
-		return new ReactiveCouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter, couchbaseTranslationService);
+		return new ReactiveCouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter,
+				couchbaseTranslationService);
+	}
+
+	public ReactiveCouchbaseTemplate reactiveCouchbaseTemplate(CouchbaseClientFactory couchbaseClientFactory,
+			MappingCouchbaseConverter mappingCouchbaseConverter) {
+		return reactiveCouchbaseTemplate(couchbaseClientFactory, mappingCouchbaseConverter,
+				new JacksonTranslationService());
 	}
 
 	@Bean(name = BeanNames.COUCHBASE_OPERATIONS_MAPPING)
